@@ -1,65 +1,75 @@
 class Solution {
 public:
     vector<int> sortedSquares(vector<int>& nums) {
+        int s = nums.size();
 
-       int n = nums.size();
-       vector<int>a;
-       vector<int>b;
+        vector<int> pos;
+        vector<int> neg;
 
-       for(int i=0; i<n; i++){
-       if(nums[i]>=0){
-        a.push_back(nums[i]);
-       } else{
-        b.push_back(nums[i]);
-       }
-    }
-    if(a.size()==0){
-        for(int i =0; i<n ; i++){
-            nums[i] *= nums[i];
+        for(int i = 0; i < s; i++){
+            if(nums[i] >= 0){
+                pos.push_back(nums[i]);
+            }
+            else{
+                neg.push_back(nums[i]);
+            }
         }
-        reverse(nums.begin(),nums.end());
-        return nums;
-    }
-    if(b.size()==0){
-        for(int i =0 ; i<n;i++){
-            nums[i] *= nums[i];
-        }
-        return nums;
-    }
-        int p = a.size();
-        int q= b.size();
-        vector<int>res(p+q);
-        int id=0, i=0 , j=0;
 
-        for(int i =0; i<p; i++){
-            a[i] *= a[i];
-        }
-        for(int i=0; i<q; i++){
-            b[i] *= b[i];
-        }
-        reverse(b.begin(),b.end());
+        int n = neg.size();
+        int p = pos.size();
 
-        while(i<p && j<q){
-            if(a[i]<=b[j]){
-                res[id]=a[i];
-                id++;
-                i++;
-            }else{
-                res[id]=b[j];
+        if(n == 0){
+            for(int i = 0; i < p; i++){
+                pos[i] *= pos[i];
+            }
+            return pos;
+        }
+
+        if(p == 0){
+            for(int i = 0; i < n; i++){
+                neg[i] *= neg[i];
+            }
+            reverse(neg.begin(), neg.end());
+            return neg;
+        }
+
+        for(int i = 0; i < n; i++){
+            neg[i] *= neg[i];
+        }
+        reverse(neg.begin(), neg.end());
+
+        for(int i = 0; i < p; i++){
+            pos[i] *= pos[i];
+        }
+
+        int i = 0, j = 0, id = 0;
+        vector<int> res(n + p);
+
+        while(i < p && j < n){
+            if(neg[j] <= pos[i]){
+                res[id] = neg[j];
                 id++;
                 j++;
             }
+            else{
+                res[id] = pos[i];
+                id++;
+                i++;
+            }
         }
-        while(j<q){
-            res[id] = b[j];
+
+        while(i < p){
+            res[id] = pos[i];
+            id++;
+            i++;
+        }
+
+        while(j < n){
+            res[id] = neg[j];
             id++;
             j++;
         }
-        while(i<p){
-            res[id]=a[i];
-            id++;
-            i++;
-    }
-    return res;
+
+        return res;
     }
 };
